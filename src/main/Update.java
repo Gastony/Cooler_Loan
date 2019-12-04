@@ -23,6 +23,7 @@ public class Update extends javax.swing.JPanel {
      */
     public Update() {
         initComponents();
+        Fillcombo();
         try {
     
             Connection con = DBConn.myConn();
@@ -82,6 +83,7 @@ public class Update extends javax.swing.JPanel {
         OutletNumber_jTextField = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         CoolerAssetnumber_jTextField = new javax.swing.JTextField();
+        Serial_combobox = new javax.swing.JComboBox<>();
 
         jLabel1.setText("Customer Name");
 
@@ -131,7 +133,9 @@ public class Update extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(235, 235, 235)
+                .addGap(49, 49, 49)
+                .addComponent(Serial_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(130, 130, 130)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,7 +219,8 @@ public class Update extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(CoolerTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(CoolerTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Serial_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
@@ -241,7 +246,7 @@ public class Update extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(63, 63, 63)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(393, Short.MAX_VALUE))
+                .addContainerGap(326, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,7 +321,24 @@ public class Update extends javax.swing.JPanel {
     private void CoolerTag_jTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CoolerTag_jTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CoolerTag_jTextFieldActionPerformed
+private void Fillcombo(){
+try{
+String sql = "SELECT * FROM coolers";
+Connection con = DBConn.myConn();
+PreparedStatement pst;
+    pst = con.prepareStatement(sql);
+ResultSet rs = pst.executeQuery();
+while(rs.next()){
+String name = rs.getString("cooler_sn");
+Serial_combobox.addItem(name);
+}
 
+}
+catch(Exception e){
+JOptionPane.showMessageDialog(null,e);
+}
+
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField CoolerAssetnumber_jTextField;
@@ -328,6 +350,7 @@ public class Update extends javax.swing.JPanel {
     private javax.swing.JTextField OutletName_jTextField;
     private javax.swing.JTextField OutletNumber_jTextField;
     private javax.swing.JTextField OutletTag_jTextField;
+    private javax.swing.JComboBox<String> Serial_combobox;
     private javax.swing.JTextField Serial_jTextField;
     private javax.swing.JButton Update_jButton;
     private javax.swing.JLabel jLabel1;

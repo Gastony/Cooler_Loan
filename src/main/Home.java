@@ -324,9 +324,12 @@ Update update = new Update();
     }//GEN-LAST:event_Update_info_jButtonActionPerformed
 
     private void Contracts_jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Contracts_jButtonActionPerformed
-      Contract mycontract = new Contract();
+//      Contract mycontract = new Contract();
+//        Data_jPanel.setBackground(Color.red);
+//       jSplitPane1.setRightComponent( mycontract);  // TODO add your handling code here:
+  test mycontract = new test();
         Data_jPanel.setBackground(Color.red);
-       jSplitPane1.setRightComponent( mycontract);  // TODO add your handling code here:
+       jSplitPane1.setRightComponent( mycontract);
     }//GEN-LAST:event_Contracts_jButtonActionPerformed
 
     private void Reports_jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Reports_jButtonActionPerformed
