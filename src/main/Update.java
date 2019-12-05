@@ -5,10 +5,13 @@
  */
 package main;
 
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Random;
+import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -18,17 +21,16 @@ import javax.swing.JOptionPane;
  */
 public class Update extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Update2
-     */
+    
     public Update() {
         initComponents();
-        Fillcombo();
+        Fillcombo();//methods for listing all cooler serial availablenon combobox
+        generateGatepass(12);
         try {
     
             Connection con = DBConn.myConn();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT outlet_owner,outlet_name,location FROM loan_coooler where approved_by_asm =1 AND approved_by_rsm=1 AND approved_by_contlr=0");
+            ResultSet rs = stmt.executeQuery("SELECT outlet_owner,outlet_name,outlet_no,location FROM loan_coooler where approved_by_asm =1 AND approved_by_rsm=1 AND approved_by_contlr=0");
         if(rs.next()) { 
         String customer = rs.getString("outlet_owner");
         CustomerName_jTextField.setText(customer);
@@ -36,7 +38,8 @@ public class Update extends javax.swing.JPanel {
         OutletName_jTextField.setText(outlet);
         String location = rs.getString("location");
         Location_jTextField.setText(location);
-        
+        String outletNo = rs.getString("outlet_no");
+        OutletNumber_jTextField.setText(outletNo);
         
     }
             rs.close();
@@ -72,7 +75,6 @@ public class Update extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         CoolerTag_jTextField = new javax.swing.JTextField();
         OutletTag_jTextField = new javax.swing.JTextField();
-        Serial_jTextField = new javax.swing.JTextField();
         CoolerType_jTextField = new javax.swing.JTextField();
         OutletName_jLabel = new javax.swing.JLabel();
         Update_jButton = new javax.swing.JButton();
@@ -84,6 +86,8 @@ public class Update extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         CoolerAssetnumber_jTextField = new javax.swing.JTextField();
         Serial_combobox = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        Gate_pass_jTextField = new javax.swing.JTextField();
 
         jLabel1.setText("Customer Name");
 
@@ -126,117 +130,122 @@ public class Update extends javax.swing.JPanel {
 
         jLabel9.setText("Outlet Number");
 
+        OutletNumber_jTextField.setEditable(false);
+
         jLabel10.setText("Cooler Asset Number");
+
+        jLabel11.setText("Gate pass");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addComponent(Serial_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(130, 130, 130)
+                .addGap(207, 207, 207)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel10))
-                        .addGap(31, 31, 31)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(outletName_jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
-                            .addComponent(OutletName_jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(CoolerAssetnumber_jTextField)
-                                    .addComponent(CoolerType_jTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
-                                .addGap(46, 46, 46))))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel6)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Serial_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel4)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CoolerTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(OutletTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel9)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(OutletNumber_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Location_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(OutletName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(60, 60, 60)
-                            .addComponent(CustomerName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(Update_jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(261, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel4))
+                                .addGap(31, 31, 31)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(outletName_jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
+                                    .addComponent(OutletName_jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(CoolerTag_jTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                                            .addComponent(CoolerAssetnumber_jTextField)
+                                            .addComponent(CoolerType_jTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                                            .addComponent(Serial_combobox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(Gate_pass_jTextField, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addGap(46, 46, 46))))
+                            .addComponent(Update_jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(OutletTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel9)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(OutletNumber_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(Location_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(OutletName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addGap(60, 60, 60)
+                                    .addComponent(CustomerName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(261, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel6))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(CustomerName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(OutletName_jLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(OutletName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Location_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(CustomerName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(OutletName_jLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3)
-                                .addComponent(OutletName_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Location_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(outletName_jLabel)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(OutletNumber_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(OutletTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(CoolerTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Serial_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(Serial_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel7))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CoolerType_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(outletName_jLabel)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(OutletNumber_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(OutletTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(Serial_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CoolerTag_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(CoolerType_jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(CoolerAssetnumber_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addGap(37, 37, 37)
+                .addGap(23, 23, 23)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Gate_pass_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
                 .addComponent(Update_jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -253,7 +262,7 @@ public class Update extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -266,29 +275,32 @@ public class Update extends javax.swing.JPanel {
         } else if (response == JOptionPane.YES_OPTION) {
             try {
                 String value1=OutletTag_jTextField.getText();
-                String value2=OutletNumber_jTextField.getText();
+          
                 String value3=CoolerTag_jTextField.getText();
                 String value4=CoolerType_jTextField.getText();
                 String value5=CoolerAssetnumber_jTextField.getText();
-                String value6=Serial_jTextField.getText();
+                String value6=Serial_combobox.getSelectedItem().toString();
+                String value7=Gate_pass_jTextField.getText();
                 String str= CustomerName_jTextField.getText();
                 Connection con = DBConn.myConn();
-                PreparedStatement stmt = con.prepareStatement("UPDATE loan_coooler SET outlet_tag=? ,outlet_no=?,cooler_type=? WHERE outlet_owner=?");
+                PreparedStatement stmt = con.prepareStatement("UPDATE loan_coooler SET outlet_tag=? ,cooler_type=?,approved_by_contlr=1 WHERE outlet_owner=?");
                 stmt.setString(1, value1);
-                stmt.setString(2, value2);
-                stmt.setString(3, value4);
-                stmt.setString(4, str);
+            
+                stmt.setString(2, value4);
+                stmt.setString(3, str);
 
                 int rs = stmt.executeUpdate();
 
-                PreparedStatement stmt2 = con.prepareStatement("UPDATE coolers SET cooler_tag=? ,cooler_serialno=?,cooler_asset_number=?,is_rented =1 WHERE cooler_id = (SELECT cooler_id FROM vtrack_release_info WHERE request_id =(SELECT ln_col_id FROM loan_coooler WHERE outlet_owner=? ))");
+                PreparedStatement stmt2 = con.prepareStatement("UPDATE coolers SET cooler_tag=? ,cooler_asset_number=?,is_rented =1 WHERE cooler_sn = ?");
                 stmt2.setString(1, value3);
 
-                stmt2.setString(2, value6);
-                stmt2.setString(3, value5);
-                stmt2.setString(4, str);
-                PreparedStatement stmt3 = con.prepareStatement("UPDATE loan_coooler SET approved_by_contlr=1  WHERE  outlet_owner=? ");
-                stmt3.setString(1, str);
+
+                stmt2.setString(2, value5);
+                stmt2.setString(3, value6);
+                PreparedStatement stmt3 = con.prepareStatement("INSERT INTO vtrack_release_info(cooler_sn,gate_pass,request_id,release_date) VALUES(?,?,(SELECT  ln_col_id FROM loan_coooler WHERE outlet_owner=?),now()) ");
+                stmt3.setString(1, value6);
+                stmt3.setString(2, value7);
+                stmt3.setString(3, str);
                 int rs3 = stmt3.executeUpdate();
 
                 int rs2 = stmt2.executeUpdate();
@@ -302,7 +314,7 @@ public class Update extends javax.swing.JPanel {
                 CoolerTag_jTextField.setText("");
                 CoolerType_jTextField.setText("");
                 CoolerAssetnumber_jTextField.setText("");
-                Serial_jTextField.setText("");
+                
 
                 JOptionPane.showMessageDialog(null, "Records successful updated");
             } catch (Exception ex) {
@@ -323,7 +335,7 @@ public class Update extends javax.swing.JPanel {
     }//GEN-LAST:event_CoolerTag_jTextFieldActionPerformed
 private void Fillcombo(){
 try{
-String sql = "SELECT * FROM coolers";
+String sql = "SELECT * FROM coolers WHERE is_rented=0";
 Connection con = DBConn.myConn();
 PreparedStatement pst;
     pst = con.prepareStatement(sql);
@@ -340,21 +352,50 @@ JOptionPane.showMessageDialog(null,e);
 
 }
 
+String generateGatepass(int n) 
+    { 
+  
+        // chose a Character random from this String 
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                    + "0123456789"
+                                    + "abcdefghijklmnopqrstuvxyz"; 
+  
+        // create StringBuffer size of AlphaNumericString 
+        StringBuilder sb = new StringBuilder(n); 
+  
+        for (int i = 0; i < n; i++) { 
+  
+            // generate a random number between 
+            // 0 to AlphaNumericString variable length 
+            int index = (int)(AlphaNumericString.length()* Math.random()); 
+  
+            // add Character one by one in end of sb 
+            sb.append(AlphaNumericString.charAt(index)); 
+        } 
+  String gatepass = sb.toString(); 
+Gate_pass_jTextField.setText(gatepass);
+        return gatepass; 
+
+    }
+
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField CoolerAssetnumber_jTextField;
     private javax.swing.JTextField CoolerTag_jTextField;
     private javax.swing.JTextField CoolerType_jTextField;
     private javax.swing.JTextField CustomerName_jTextField;
+    private javax.swing.JTextField Gate_pass_jTextField;
     private javax.swing.JTextField Location_jTextField;
     private javax.swing.JLabel OutletName_jLabel;
     private javax.swing.JTextField OutletName_jTextField;
     private javax.swing.JTextField OutletNumber_jTextField;
     private javax.swing.JTextField OutletTag_jTextField;
     private javax.swing.JComboBox<String> Serial_combobox;
-    private javax.swing.JTextField Serial_jTextField;
     private javax.swing.JButton Update_jButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
