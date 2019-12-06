@@ -46,10 +46,10 @@ import javax.swing.table.TableColumnModel;
  */
 public class Home extends javax.swing.JFrame {
 
-    public Home() {
+    public Home() throws SQLException {
        
         initComponents();
-
+setStatus();
 
     }
     
@@ -324,10 +324,8 @@ Update update = new Update();
     }//GEN-LAST:event_Update_info_jButtonActionPerformed
 
     private void Contracts_jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Contracts_jButtonActionPerformed
-//      Contract mycontract = new Contract();
-//        Data_jPanel.setBackground(Color.red);
-//       jSplitPane1.setRightComponent( mycontract);  // TODO add your handling code here:
-  test mycontract = new test();
+
+  Contract mycontract = new Contract();
         Data_jPanel.setBackground(Color.red);
        jSplitPane1.setRightComponent( mycontract);
     }//GEN-LAST:event_Contracts_jButtonActionPerformed
@@ -514,7 +512,7 @@ String columnName7 = jtbl.getModel().getColumnName(6);
      * @param args the command line arguments
      * @throws java.io.IOException
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws SQLException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -542,7 +540,11 @@ new Home();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home().setVisible(true);
+                try {
+                    new Home().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
                 
             }
@@ -551,7 +553,14 @@ new Home();
         });
     }
  
+public void setStatus() throws SQLException{
+Connection con = DBConn.myConn();
+PreparedStatement stmt = con.prepareStatement(" create view loanCoolerView as select   *  , case when approved_by_asm = 0 and approved_by_rsm = 0 THEN 'PENDING' when approved_by_asm = 0 and approved_by_rsm = 1 THEN 'PENDING' when approved_by_asm = 1 and approved_by_rsm = 0 THEN 'PENDING' when approved_by_asm = 1 and approved_by_rsm = 1 THEN 'APPROVED'else 'DECLINED' end cooler_status from loan_coooler ");
+ResultSet rs = stmt.executeQuery();
+System.out.println(rs+" records affected");
 
+                con.close();
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton All_orders_jButton;
     private javax.swing.JButton Approved_orders_jButton;
