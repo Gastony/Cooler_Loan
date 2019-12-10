@@ -49,7 +49,7 @@ public class Home extends javax.swing.JFrame {
     public Home() throws SQLException {
        
         initComponents();
-setStatus();
+
 
     }
     
@@ -86,6 +86,7 @@ setStatus();
         Contracts_jButton = new javax.swing.JButton();
         Reports_jButton = new javax.swing.JButton();
         Declinedl_orders_jButton = new javax.swing.JButton();
+        Rented_jButton1 = new javax.swing.JButton();
         Data_jPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -238,6 +239,14 @@ setStatus();
             }
         });
 
+        Rented_jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/main/images/delivered_truck-32.png"))); // NOI18N
+        Rented_jButton1.setText("RENTED");
+        Rented_jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Rented_jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout Button_jPanelLayout = new javax.swing.GroupLayout(Button_jPanel);
         Button_jPanel.setLayout(Button_jPanelLayout);
         Button_jPanelLayout.setHorizontalGroup(
@@ -251,7 +260,8 @@ setStatus();
                     .addComponent(Contracts_jButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Reports_jButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Update_info_jButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Declinedl_orders_jButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(Declinedl_orders_jButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Rented_jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         Button_jPanelLayout.setVerticalGroup(
@@ -269,9 +279,11 @@ setStatus();
                 .addComponent(Update_info_jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39)
                 .addComponent(Contracts_jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
+                .addGap(31, 31, 31)
+                .addComponent(Rented_jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addComponent(Reports_jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(195, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(Button_jPanel);
@@ -353,9 +365,14 @@ Reports myreport = new Reports();
 
             Connection con = DBConn.myConn();
   
+////
+PreparedStatement stmt1 = con.prepareStatement(" ALTER view loanCoolerView as select   *  , case when approved_by_asm = 0 and approved_by_rsm = 0 THEN 'PENDING' when approved_by_asm = 0 and approved_by_rsm = 1 THEN 'PENDING' when approved_by_asm = 1 and approved_by_rsm = 0 THEN 'PENDING' when approved_by_asm = 1 and approved_by_rsm = 1 THEN 'APPROVED'else 'DECLINED' end cooler_status from loan_coooler WHERE outlet_owner LIKE ?");
+stmt1.setString(1, "%" +id + "%"); 
+int rs1 = stmt1.executeUpdate();
+System.out.println(rs1+" records affected");
+////
 
-
- PreparedStatement stmt = con.prepareStatement("SELECT doc_no,contract_no,outlet_name,outlet_owner,outlet_no,location,approved_by_asm,approved_by_rsm FROM loan_coooler WHERE outlet_owner LIKE ?");
+ PreparedStatement stmt = con.prepareStatement("SELECT doc_no,contract_no,outlet_name,outlet_owner,outlet_no,location,cooler_status FROM loanCoolerView WHERE outlet_owner LIKE ?");
  stmt.setString(1, "%" +id + "%"); 
 
             ResultSet rs = stmt.executeQuery();
@@ -464,7 +481,7 @@ String columnName5 = jtbl.getModel().getColumnName(4);
 
 String columnName7 = jtbl.getModel().getColumnName(6);
     headerRenderer7.setText(columnName7);
-    headerRenderer7.setToolTipText("Salesman Name");
+    headerRenderer7.setToolTipText("Cooler Status");
     TableColumnModel columnModel7 = jtbl.getColumnModel();
     TableColumn salesManColumn = columnModel7.getColumn(6);
     salesManColumn.setHeaderRenderer((TableCellRenderer)headerRenderer7);
@@ -507,6 +524,12 @@ String columnName7 = jtbl.getModel().getColumnName(6);
     private void Declinedl_orders_jButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Declinedl_orders_jButtonMousePressed
        Declinedl_orders_jButton.setBackground(Color.blue);  // TODO add your handling code here:
     }//GEN-LAST:event_Declinedl_orders_jButtonMousePressed
+
+    private void Rented_jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Rented_jButton1ActionPerformed
+Rented rented = new Rented();
+        Data_jPanel.setBackground(Color.red);
+       jSplitPane1.setRightComponent( rented);        // TODO add your handling code here:
+    }//GEN-LAST:event_Rented_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -553,14 +576,7 @@ new Home();
         });
     }
  
-public void setStatus() throws SQLException{
-Connection con = DBConn.myConn();
-PreparedStatement stmt = con.prepareStatement(" create view loanCoolerView as select   *  , case when approved_by_asm = 0 and approved_by_rsm = 0 THEN 'PENDING' when approved_by_asm = 0 and approved_by_rsm = 1 THEN 'PENDING' when approved_by_asm = 1 and approved_by_rsm = 0 THEN 'PENDING' when approved_by_asm = 1 and approved_by_rsm = 1 THEN 'APPROVED'else 'DECLINED' end cooler_status from loan_coooler ");
-ResultSet rs = stmt.executeQuery();
-System.out.println(rs+" records affected");
 
-                con.close();
-}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton All_orders_jButton;
     private javax.swing.JButton Approved_orders_jButton;
@@ -570,6 +586,7 @@ System.out.println(rs+" records affected");
     private javax.swing.JButton Declinedl_orders_jButton;
     private javax.swing.JLabel Logo_jLabel;
     private javax.swing.JButton Pending_orders_jButton;
+    private javax.swing.JButton Rented_jButton1;
     private javax.swing.JButton Reports_jButton;
     private javax.swing.JButton Search_jButton;
     public javax.swing.JTextField Search_jTextField;
