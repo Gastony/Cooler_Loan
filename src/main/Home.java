@@ -254,7 +254,7 @@ public class Home extends javax.swing.JFrame {
         });
 
         Rented_jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/main/images/delivered_truck-32.png"))); // NOI18N
-        Rented_jButton1.setText("RENTED");
+        Rented_jButton1.setText("DELIVERED");
         Rented_jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Rented_jButton1ActionPerformed(evt);
