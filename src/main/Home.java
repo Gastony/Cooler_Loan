@@ -24,6 +24,7 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Statement;
 import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -32,6 +33,16 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.jdbc.JDBCCategoryDataset;
+
 
 
 
@@ -49,10 +60,10 @@ import javax.swing.table.TableColumnModel;
  */
 public class Home extends javax.swing.JFrame {
 
-    public Home() throws SQLException {
+    public Home() throws SQLException, IOException {
        
         initComponents();
-
+coolerChart();
 
     }
     
@@ -538,7 +549,7 @@ Rented rented = new Rented();
      * @param args the command line arguments
      * @throws java.io.IOException
      */
-    public static void main(String args[]) throws SQLException {
+    public static void main(String args[]) throws SQLException, IOException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -570,6 +581,8 @@ new Home();
                     new Home().setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 
@@ -578,7 +591,36 @@ new Home();
             
         });
     }
- 
+public void coolerChart() throws IOException, SQLException{
+   try {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        Connection con = DBConn.myConn();
+
+        String query = "Select cooler_type ,request_date  from loan_coooler group by request_date";
+
+        PreparedStatement ps = con.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            String toc = rs.getString("cooler_type");
+            int  summary = rs.getInt("request_date");
+            dataset.setValue(summary, toc, toc);
+        }
+        JFreeChart chart = ChartFactory.createBarChart("Cooler Requested", "Cooler Type", "Date requested", dataset, PlotOrientation.VERTICAL, false, true, false);
+        CategoryPlot p = chart.getCategoryPlot();
+
+         //p.setRangeGridlinePaint(Color.BLUE);
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setVisible(true);
+        panel.setSize(800, 400);
+        Data_jPanel.add(panel);
+
+    } catch (SQLException e) {
+
+    }
+
+}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton All_orders_jButton;
