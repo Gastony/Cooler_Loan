@@ -63,7 +63,7 @@ public class Home extends javax.swing.JFrame {
     public Home() throws SQLException, IOException {
        
         initComponents();
-coolerChart();
+
 
     }
     
@@ -591,35 +591,7 @@ new Home();
             
         });
     }
-public void coolerChart() throws IOException, SQLException{
-   try {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        Connection con = DBConn.myConn();
 
-        String query = "Select cooler_type ,request_date  from loan_coooler group by request_date";
-
-        PreparedStatement ps = con.prepareStatement(query);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            String toc = rs.getString("cooler_type");
-            int  summary = rs.getInt("request_date");
-            dataset.setValue(summary, toc, toc);
-        }
-        JFreeChart chart = ChartFactory.createBarChart("Cooler Requested", "Cooler Type", "Date requested", dataset, PlotOrientation.VERTICAL, false, true, false);
-        CategoryPlot p = chart.getCategoryPlot();
-
-         //p.setRangeGridlinePaint(Color.BLUE);
-
-        ChartPanel panel = new ChartPanel(chart);
-        panel.setVisible(true);
-        panel.setSize(800, 400);
-        Data_jPanel.add(panel);
-
-    } catch (SQLException e) {
-
-    }
-
-}
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
