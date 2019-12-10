@@ -21,6 +21,8 @@ import javax.swing.table.JTableHeader;
 import net.proteanit.sql.DbUtils;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
 import javax.swing.JLabel;
