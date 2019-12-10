@@ -12,7 +12,9 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 //import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -21,6 +23,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
@@ -233,7 +237,7 @@ public class Contract extends javax.swing.JPanel {
 
     private void Print_jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Print_jButtonActionPerformed
         PrinterJob job = PrinterJob.getPrinterJob();
-        job.setJobName("Print Contract");
+        job.setJobName("Cooler Contract");
         job.setPrintable(new Printable(){
             public int print(Graphics pg,PageFormat pf,int PageNum){
                 if(PageNum>0){
@@ -254,6 +258,24 @@ public class Contract extends javax.swing.JPanel {
             }
             catch(PrinterException ex){}
         }
+        Connection con = DBConn.myConn();
+                PreparedStatement stmt = null;
+        try {
+            stmt = con.prepareStatement("UPDATE loan_coooler SET contract =1 where approved_by_asm =1 AND approved_by_rsm=1 AND approved_by_contlr=1 AND outlet_owner=?");
+        } catch (SQLException ex) {
+            Logger.getLogger(Contract.class.getName()).log(Level.SEVERE, null, ex);
+        }
+String str =  CustomerName_jLabel.getText();                
+        try {
+            stmt.setString(1, str);
+        } catch (SQLException ex) {
+            Logger.getLogger(Contract.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            int rs = stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Contract.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_Print_jButtonActionPerformed
 public void insertDate(){
 Date d=new Date();
@@ -271,7 +293,7 @@ try {
     
             Connection con = DBConn.myConn();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT outlet_owner FROM loan_coooler where approved_by_asm =1 AND approved_by_rsm=1 AND approved_by_contlr=1");
+            ResultSet rs = stmt.executeQuery("SELECT outlet_owner FROM loan_coooler where approved_by_asm =1 AND approved_by_rsm=1 AND approved_by_contlr=1 AND contract=0");
         if(rs.next()) { 
         String customer = rs.getString("outlet_owner");
         CustomerName_jLabel.setText(customer);
@@ -290,9 +312,13 @@ public void insertOutletName(){
 try {
     
             Connection con = DBConn.myConn();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT outlet_name FROM loan_coooler where approved_by_asm =1 AND approved_by_rsm=1 AND approved_by_contlr=1");
-        if(rs.next()) { 
+            PreparedStatement stmt = con.prepareStatement("SELECT outlet_name FROM loan_coooler where approved_by_asm =1 AND approved_by_rsm=1 AND approved_by_contlr=1  AND outlet_owner =? ");
+           
+        String str =  CustomerName_jLabel.getText();                
+ stmt.setString(1, str);
+                
+                 ResultSet rs = stmt.executeQuery();
+            if(rs.next()) { 
         String outletName = rs.getString("outlet_name");
         outletNamejLabel.setText(outletName);
        
